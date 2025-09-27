@@ -229,7 +229,28 @@ header h1 i {
     border-top: 1px solid #eaeaea;
 }
 
+.stats {
+    font-weight: bold;
+    color: #555;
+}
 
+.action-btn {
+    padding: 8px 15px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.action-btn:hover {
+    background: #ff5252;
+}
+
+.action-btn i {
+    margin-left: 5px;
+}
 
 
 
