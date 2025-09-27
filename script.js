@@ -245,3 +245,46 @@ function saveTasks() {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
+
+
+// عرض رسائل للمستخدم
+function showMessage(message, type) {
+    // إنشاء عنصر الرسالة
+    const messageEl = document.createElement('div');
+    // messageEl.className = message ${type};
+    messageEl.textContent = message;
+    
+    // إضافة الأنماط
+    messageEl.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 20px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    // تلوين الرسالة حسب النوع
+    if (type === 'success') {
+        messageEl.style.background = '#4caf50';
+    } else if (type === 'error') {
+        messageEl.style.background = '#f44336';
+    } else {
+        messageEl.style.background = '#2196f3';
+    }
+    
+    // إضافة الرسالة إلى الصفحة
+    document.body.appendChild(messageEl);
+    
+    // إزالة الرسالة بعد 3 ثواني
+    setTimeout(() => {
+        messageEl.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => {
+            document.body.removeChild(messageEl);
+        }, 300);
+    }, 3000);
+}
