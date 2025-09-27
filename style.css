@@ -133,6 +133,38 @@ header h1 i {
 }
 
 
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.3s;
+    animation: fadeIn 0.3s ease;
+}
+
+.task-item:hover {
+    background: #f8f9fa;
+}
+
+.task-item.completed {
+    background: #f8fff8;
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-left: 15px;
+    cursor: pointer;
+}
+
+
 
 
 
