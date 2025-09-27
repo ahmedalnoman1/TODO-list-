@@ -164,6 +164,30 @@ header h1 i {
     cursor: pointer;
 }
 
+.task-text {
+    flex: 1;
+    font-size: 1.1rem;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.task-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.task-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.3s;
+    color: #666;
+}
 
 
 
