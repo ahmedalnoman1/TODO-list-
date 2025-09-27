@@ -172,3 +172,28 @@ function openEditModal(taskId) {
     }
 }
 
+
+
+// حفظ التعديلات
+function saveEditedTask() {
+    const text = editTaskInput.value.trim();
+    
+    if (text === '') {
+        showMessage('يرجى إدخال نص المهمة', 'error');
+        return;
+    }
+    
+    tasks = tasks.map(task => {
+        if (task.id === editingTaskId) {
+            return { ...task, text: text };
+        }
+        return task;
+    });
+    
+    saveTasks();
+    renderTasks();
+    closeEditModal();
+    showMessage('تم تعديل المهمة بنجاح', 'success');
+}
+
+
