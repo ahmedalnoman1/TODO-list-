@@ -122,6 +122,30 @@ header h1 i {
     background: #e9ecef;
 }
 
+.tasks-section {
+    min-height: 300px;
+    position: relative;
+}
+
+#taskList {
+    list-style: none;
+    padding: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* نافذة التحرير */
 .modal {
     display: none;
