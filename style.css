@@ -200,7 +200,24 @@ header h1 i {
 }
 
 
+/* حالة عدم وجود مهام */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #888;
+    display: none;
+}
 
+.empty-state i {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state p {
+    margin: 10px 0;
+    font-size: 1.2rem;
+}
 
 
 
