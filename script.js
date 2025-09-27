@@ -114,6 +114,38 @@ function filterTasks() {
     }
 }
 
+// إنشاء عنصر المهمة
+function createTaskElement(task) {
+    const li = document.createElement('li');
+    // li.className = task-item {task.completed ? 'completed' : ''};
+    li.dataset.id = task.id;
+    
+    li.innerHTML = `
+        <div class="task-content">
+            <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+            <span class="task-text">${task.text}</span>
+        </div>
+        <div class="task-actions">
+            <button class="edit-btn" title="تحرير">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn" title="حذف">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    
+    // أحداث العناصر
+    const checkbox = li.querySelector('.task-checkbox');
+    const editBtn = li.querySelector('.edit-btn');
+    const deleteBtn = li.querySelector('.delete-btn');
+    
+    checkbox.addEventListener('change', () => toggleTaskCompletion(task.id));
+    editBtn.addEventListener('click', () => openEditModal(task.id));
+    deleteBtn.addEventListener('click', () => deleteTask(task.id));
+    
+    return li;
+}
 
 
 
