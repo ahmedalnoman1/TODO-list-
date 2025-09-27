@@ -202,3 +202,35 @@ function closeEditModal() {
     editingTaskId = null;
     editTaskInput.value = '';
 }
+
+
+// حذف المهمة
+function deleteTask(taskId) {
+    if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+        tasks = tasks.filter(task => task.id !== taskId);
+        saveTasks();
+        renderTasks();
+        updateTaskCount();
+        showMessage('تم حذف المهمة بنجاح', 'success');
+    }
+}
+
+// حذف جميع المهام المكتملة
+function clearCompletedTasks() {
+    const completedCount = tasks.filter(task => task.completed).length;
+    
+    if (completedCount === 0) {
+        showMessage('لا توجد مهام مكتملة لحذفها', 'info');
+        return;
+    }
+
+   
+        tasks = tasks.filter(task => !task.completed);
+        saveTasks();
+        renderTasks();
+        updateTaskCount();
+        showMessage('تم حذف المهام المكتملة بنجاح', 'success');
+    
+}
+
+
