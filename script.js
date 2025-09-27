@@ -1,0 +1,290 @@
+// حالة التطبيق
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let currentFilter = 'all';
+let editingTaskId = null;
+
+
+// عناصر DOM
+const taskInput = document.getElementById('taskInput');
+const addBtn = document.getElementById('addBtn');
+const taskList = document.getElementById('taskList');
+const taskCount = document.getElementById('taskCount');
+const clearCompletedBtn = document.getElementById('clearCompleted');
+const filterBtns = document.querySelectorAll('.filter-btn');
+const emptyState = document.getElementById('emptyState');
+const editModal = document.getElementById('editModal');
+const editTaskInput = document.getElementById('editTaskInput');
+const saveEditBtn = document.getElementById('saveEditBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+// تهيئة التطبيق
+document.addEventListener('DOMContentLoaded', () => {
+    renderTasks();
+    updateTaskCount();
+
+// إضافة مهمة جديدة
+addBtn.addEventListener('click', addTask);
+taskInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') addTask();
+});
+
+
+// فلترة المهام
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderTasks();
+    });
+});
+
+
+// حذف المهام المكتملة
+clearCompletedBtn.addEventListener('click', clearCompletedTasks);
+    
+// أحداث نافذة التحرير
+saveEditBtn.addEventListener('click', saveEditedTask);
+cancelEditBtn.addEventListener('click', closeEditModal);
+
+// إغلاق النافذة عند النقر خارجها
+editModal.addEventListener('click', (e) => {
+    if (e.target === editModal) closeEditModal();
+});
+});
+
+
+// إضافة مهمة جديدة
+function addTask() {
+    const text = taskInput.value.trim();
+    
+    if (text === '') {
+        showMessage('يرجى إدخال نص المهمة', 'error');
+        return;
+    }
+    
+    const newTask = {
+        id: Date.now(),
+        text: text,
+        completed: false,
+        createdAt: new Date().toISOString()
+    };
+    
+    tasks.unshift(newTask);
+    saveTasks();
+    renderTasks();
+    updateTaskCount();
+    
+    taskInput.value = '';
+    taskInput.focus();
+    
+    showMessage('تمت إضافة المهمة بنجاح', 'success');
+}
+
+
+// عرض المهام
+function renderTasks() {
+    const filteredTasks = filterTasks();
+    
+    if (filteredTasks.length === 0) {
+        taskList.style.display = 'none';
+        emptyState.style.display = 'block';
+    } else {
+        taskList.style.display = 'block';
+        emptyState.style.display = 'none';
+        
+        taskList.innerHTML = '';
+        
+        filteredTasks.forEach(task => {
+            const taskItem = createTaskElement(task);
+            taskList.appendChild(taskItem);
+        });
+    }
+}
+
+// تصفية المهام حسب الحالة
+function filterTasks() {
+    switch (currentFilter) {
+        case 'active':
+            return tasks.filter(task => !task.completed);
+        case 'completed':
+            return tasks.filter(task => task.completed);
+        default:
+            return tasks;
+    }
+}
+
+// إنشاء عنصر المهمة
+function createTaskElement(task) {
+    const li = document.createElement('li');
+    // li.className = task-item {task.completed ? 'completed' : ''};
+    li.dataset.id = task.id;
+    
+    li.innerHTML = `
+        <div class="task-content">
+            <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}>
+            <span class="task-text">${task.text}</span>
+        </div>
+        <div class="task-actions">
+            <button class="edit-btn" title="تحرير">
+                <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn" title="حذف">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    
+    // أحداث العناصر
+    const checkbox = li.querySelector('.task-checkbox');
+    const editBtn = li.querySelector('.edit-btn');
+    const deleteBtn = li.querySelector('.delete-btn');
+    
+    checkbox.addEventListener('change', () => toggleTaskCompletion(task.id));
+    editBtn.addEventListener('click', () => openEditModal(task.id));
+    deleteBtn.addEventListener('click', () => deleteTask(task.id));
+    
+    return li;
+}
+
+// تبديل حالة إكمال المهمة
+function toggleTaskCompletion(taskId) {
+    tasks = tasks.map(task => {
+        if (task.id === taskId) {
+            return { ...task, completed: !task.completed };
+        }
+        return task;
+    });
+    
+    saveTasks();
+    renderTasks();
+    updateTaskCount();
+}
+
+// فتح نافذة التحرير
+function openEditModal(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+        editingTaskId = taskId;
+        editTaskInput.value = task.text;
+        editModal.style.display = 'flex';
+        editTaskInput.focus();
+    }
+}
+
+
+
+// حفظ التعديلات
+function saveEditedTask() {
+    const text = editTaskInput.value.trim();
+    
+    if (text === '') {
+        showMessage('يرجى إدخال نص المهمة', 'error');
+        return;
+    }
+    
+    tasks = tasks.map(task => {
+        if (task.id === editingTaskId) {
+            return { ...task, text: text };
+        }
+        return task;
+    });
+    
+    saveTasks();
+    renderTasks();
+    closeEditModal();
+    showMessage('تم تعديل المهمة بنجاح', 'success');
+}
+
+// إغلاق نافذة التحرير
+function closeEditModal() {
+    editModal.style.display = 'none';
+    editingTaskId = null;
+    editTaskInput.value = '';
+}
+
+
+// حذف المهمة
+function deleteTask(taskId) {
+    if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+        tasks = tasks.filter(task => task.id !== taskId);
+        saveTasks();
+        renderTasks();
+        updateTaskCount();
+        showMessage('تم حذف المهمة بنجاح', 'success');
+    }
+}
+
+// حذف جميع المهام المكتملة
+function clearCompletedTasks() {
+    const completedCount = tasks.filter(task => task.completed).length;
+    
+    if (completedCount === 0) {
+        showMessage('لا توجد مهام مكتملة لحذفها', 'info');
+        return;
+    }
+
+   
+        tasks = tasks.filter(task => !task.completed);
+        saveTasks();
+        renderTasks();
+        updateTaskCount();
+        showMessage('تم حذف المهام المكتملة بنجاح', 'success');
+    
+}
+
+// تحديث عدد المهام المتبقية
+function updateTaskCount() {
+    const activeTasks = tasks.filter(task => !task.completed).length;
+    taskCount.textContent = activeTasks;
+}
+
+
+// حفظ المهام في localStorage
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+
+
+// عرض رسائل للمستخدم
+function showMessage(message, type) {
+    // إنشاء عنصر الرسالة
+    const messageEl = document.createElement('div');
+    // messageEl.className = message ${type};
+    messageEl.textContent = message;
+    
+    // إضافة الأنماط
+    messageEl.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 12px 20px;
+        border-radius: 5px;
+        color: white;
+        font-weight: bold;
+        z-index: 1001;
+        animation: slideIn 0.3s ease;
+    `;
+    
+    // تلوين الرسالة حسب النوع
+    if (type === 'success') {
+        messageEl.style.background = '#4caf50';
+    } else if (type === 'error') {
+        messageEl.style.background = '#f44336';
+    } else {
+        messageEl.style.background = '#2196f3';
+    }
+    
+    // إضافة الرسالة إلى الصفحة
+    document.body.appendChild(messageEl);
+    
+    // إزالة الرسالة بعد 3 ثواني
+    setTimeout(() => {
+        messageEl.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => {
+            document.body.removeChild(messageEl);
+        }, 300);
+    }, 3000);
+}
