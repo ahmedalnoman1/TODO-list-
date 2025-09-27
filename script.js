@@ -147,5 +147,17 @@ function createTaskElement(task) {
     return li;
 }
 
-
+// تبديل حالة إكمال المهمة
+function toggleTaskCompletion(taskId) {
+    tasks = tasks.map(task => {
+        if (task.id === taskId) {
+            return { ...task, completed: !task.completed };
+        }
+        return task;
+    });
+    
+    saveTasks();
+    renderTasks();
+    updateTaskCount();
+}
 
