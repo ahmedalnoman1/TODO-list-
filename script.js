@@ -82,4 +82,38 @@ function addTask() {
 }
 
 
+// عرض المهام
+function renderTasks() {
+    const filteredTasks = filterTasks();
+    
+    if (filteredTasks.length === 0) {
+        taskList.style.display = 'none';
+        emptyState.style.display = 'block';
+    } else {
+        taskList.style.display = 'block';
+        emptyState.style.display = 'none';
+        
+        taskList.innerHTML = '';
+        
+        filteredTasks.forEach(task => {
+            const taskItem = createTaskElement(task);
+            taskList.appendChild(taskItem);
+        });
+    }
+}
+
+// تصفية المهام حسب الحالة
+function filterTasks() {
+    switch (currentFilter) {
+        case 'active':
+            return tasks.filter(task => !task.completed);
+        case 'completed':
+            return tasks.filter(task => task.completed);
+        default:
+            return tasks;
+    }
+}
+
+
+
 
