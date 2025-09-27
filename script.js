@@ -196,4 +196,9 @@ function saveEditedTask() {
     showMessage('تم تعديل المهمة بنجاح', 'success');
 }
 
-
+// إغلاق نافذة التحرير
+function closeEditModal() {
+    editModal.style.display = 'none';
+    editingTaskId = null;
+    editTaskInput.value = '';
+}
