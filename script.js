@@ -233,4 +233,15 @@ function clearCompletedTasks() {
     
 }
 
+// تحديث عدد المهام المتبقية
+function updateTaskCount() {
+    const activeTasks = tasks.filter(task => !task.completed).length;
+    taskCount.textContent = activeTasks;
+}
+
+
+// حفظ المهام في localStorage
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
 
