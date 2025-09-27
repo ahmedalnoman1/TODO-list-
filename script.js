@@ -161,3 +161,14 @@ function toggleTaskCompletion(taskId) {
     updateTaskCount();
 }
 
+// فتح نافذة التحرير
+function openEditModal(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+        editingTaskId = taskId;
+        editTaskInput.value = task.text;
+        editModal.style.display = 'flex';
+        editTaskInput.focus();
+    }
+}
+
