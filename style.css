@@ -90,3 +90,34 @@ header h1 i {
 #addBtn:hover {
     background: #5a6fd8;
 }
+
+
+
+/* قسم الفلترة */
+.filter-section {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background: #f1f3f5;
+    border-bottom: 1px solid #eaeaea;
+}
+
+.filter-btn {
+    padding: 8px 20px;
+    margin: 0 5px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.filter-btn.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.filter-btn:hover:not(.active) {
+    background: #e9ecef;
+}
