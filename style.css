@@ -219,7 +219,15 @@ header h1 i {
     font-size: 1.2rem;
 }
 
-
+/* الفوتر */
+.footer-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #eaeaea;
+}
 
 
 
