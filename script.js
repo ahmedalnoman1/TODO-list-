@@ -52,3 +52,34 @@ editModal.addEventListener('click', (e) => {
     if (e.target === editModal) closeEditModal();
 });
 });
+
+
+// إضافة مهمة جديدة
+function addTask() {
+    const text = taskInput.value.trim();
+    
+    if (text === '') {
+        showMessage('يرجى إدخال نص المهمة', 'error');
+        return;
+    }
+    
+    const newTask = {
+        id: Date.now(),
+        text: text,
+        completed: false,
+        createdAt: new Date().toISOString()
+    };
+    
+    tasks.unshift(newTask);
+    saveTasks();
+    renderTasks();
+    updateTaskCount();
+    
+    taskInput.value = '';
+    taskInput.focus();
+    
+    showMessage('تمت إضافة المهمة بنجاح', 'success');
+}
+
+
+
